@@ -5,3 +5,6 @@ I am still figuring out long term goals, but would either like to eventually dev
 mortem-os under the OS itself.
 
 I am using the https://wiki.osdev.org resource to create this OS.
+
+## License
+* [GNU General Public License v3.0](https://github.com/TheGuyMatt/mortem-os/blob/master/LICENSE)
