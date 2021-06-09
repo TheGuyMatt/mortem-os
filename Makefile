@@ -7,17 +7,21 @@
 # https://wiki.osdev.org/Makefile
 # https://github.com/jdah/tetris-os/blob/master/Makefile
 
-UNAME := $(shell uname)
+#UNAME := $(shell uname)
 
-ifeq ($(UNAME),Linux)
-	CC=gcc -elf_i386
-	AS=as --32
-	LD=ld -m elf_i386
-else
-	CC=i386-elf-gcc
-	AS=i386-elf-as
-	LD=i386-elf-ld
-endif
+#ifeq ($(UNAME),Linux)
+	#CC=gcc -elf_i386
+	#AS=as --32
+	#LD=ld -m elf_i386
+#else
+	#CC=i386-elf-gcc
+	#AS=i386-elf-as
+	#LD=i386-elf-ld
+#endif
+
+CC := i686-elf-gcc
+AS := i686-elf-as
+LD := i686-elf-ld
 
 # list of all non-source files
 AUXFILES := Makefile README.md LICENSE
@@ -41,7 +45,7 @@ ISO=mortem-os.iso
 ALLFILES := $(KERNEL_C_SRCS) $(KERNEL_S_SRCS) $(AUXFILES)
 
 #.PHONY: all clean dist check testdrivers todolist
-.PHONY: all clean dist dirs kernel iso todolist
+.PHONY: all clean dist dirs kernel iso isodir todolist
 
 WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 						-Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
@@ -50,13 +54,15 @@ WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 CFLAGS := -std=gnu99 -ffreestanding -O2 $(WARNINGS)
 LDFLAGS := -ffreestanding -O2 -nostdlib -lgcc
 
-all: dirs kernel
+all: dirs kernel isodir
 
 clean:
 	rm -f ./**/*.o
-	rm -f ./*.iso
 	rm -f ./**/*.elf
 	rm -f ./**/*.bin
+	rm -f ./*.iso
+	rm -f ./build/grub.cfg
+	rm -rf ./build/isodir
 
 dist:
 	@tar czf mortem-os.tar.gzip $(ALLFILES)
@@ -71,15 +77,18 @@ dirs:
 	mkdir -p build
 
 kernel: $(KERNEL_OBJS)
-	$(LD) -o ./build/$(KERNEL) $^ $(LDFLAGS) -Tsrc/linker.ld
+	$(CC) -o ./build/$(KERNEL) $^ $(LDFLAGS) -Tsrc/linker.ld
+	mv ./src/*.o ./build
 
 # this command assumes you have grub installed
+isodir:
+	echo "menuentry \"mortem-os\" {multiboot /boot/kernel.bin}" > ./build/grub.cfg
+	mkdir -p build/isodir/boot/grub
+	cp build/kernel.bin build/isodir/boot/kernel.bin
+	cp build/grub.cfg build/isodir/boot/grub/grub.cfg
+
 iso:
-	echo "menuentry \"mortem-os\" {\n        multiboot /boot/kernel.bin\n}" > ./build/grub.cfg
-	mkdir -p isodir/boot/grub
-	cp kernel.bin isodir/boot/kernel.bin
-	cp grub.cfg isodir/boot/grub/grub.cfg
-	grub-mkrescue -o mortem-os.iso isodir
+	grub-mkrescue -o build/mortem-os.iso build/isodir
 
 todolist:
 	-@for file in $(ALLFILES:Makefile=); do fgrep -H -e TODO -e FIXME $$file; done; true
