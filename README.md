@@ -1,7 +1,7 @@
 # mortem-os
 This is an OS development project that is being developed with the intention of learning more about OS development and low-level programming.
 I was inspired by [this video](https://www.youtube.com/watch?v=FaILnmUYS_U) by jdh.
-I am still figuring out long term goals, but would either like to eventually develop and application for the OS and/or be able to develop 
+I am still figuring out long term goals, but would either like to eventually develop an application for the OS and/or be able to develop 
 mortem-os under the OS itself.
 
 I am using the https://wiki.osdev.org resource to create this OS.
@@ -24,7 +24,7 @@ Assuming you have met the requirements, there are several `make` commands you ca
 * `make isodir`: creates the directory required to build the iso image with `grub`
 * `make iso`: builds the iso image
 * `make clean`: cleans build file
-* `make dist`: puts all files in the directory into a tarball or distribution if needed
+* `make dist`: puts all files in the directory into a tarball for distribution if needed
 * `make todolist`: checks source files for `TODO` and `FIXME` comments and lists them
 
 ## Running
