@@ -54,7 +54,7 @@ WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 CFLAGS := -std=gnu99 -ffreestanding -O2 $(WARNINGS)
 LDFLAGS := -ffreestanding -O2 -nostdlib -lgcc
 
-all: dirs kernel isodir
+all: dirs kernel isodir iso
 
 clean:
 	rm -f ./**/*.o
@@ -88,7 +88,10 @@ isodir:
 	cp build/grub.cfg build/isodir/boot/grub/grub.cfg
 
 iso:
-	grub-mkrescue -o build/mortem-os.iso build/isodir
+	grub-mkrescue -o $(ISO) build/isodir
+
+run-iso:
+	qemu-system-i386 -cdrom $(ISO)
 
 todolist:
 	-@for file in $(ALLFILES:Makefile=); do fgrep -H -e TODO -e FIXME $$file; done; true

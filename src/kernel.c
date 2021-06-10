@@ -100,7 +100,18 @@ void terminal_increment(void)
 {
     terminal_column = 0;
     if (++terminal_row == VGA_HEIGHT)
+    {
       terminal_row = 0;
+      for (size_t y = 0; y < VGA_HEIGHT; y++)
+      {
+        for (size_t x = 0; x < VGA_WIDTH; x++)
+        {
+          const size_t newindex = y * VGA_WIDTH + x;
+          const size_t index = (y + 1) * VGA_WIDTH + x;
+          terminal_buffer[newindex] = terminal_buffer[index];
+        }
+      }
+    }
 }
 
 void terminal_putchar(char c)
@@ -132,4 +143,5 @@ void kernel_main(void)
   /* newline character is not supported yet... */
   terminal_writestring("Hello, mOrT3m :)\n");
   terminal_writestring("Qui docet, discit\n");
+  terminal_writestring("Disco inferno\n");
 }

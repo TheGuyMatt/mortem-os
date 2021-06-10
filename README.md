@@ -18,11 +18,12 @@ This will come after the custom bootloader.
 
 ## Building
 Assuming you have met the requirements, there are several `make` commands you can use:
-* running `make` and `make iso` should create the build folder then compile the kernel binary and iso file.
+* running `make` should create the build folder then compile the kernel binary and iso file.
 * `make dirs`: creates the build directory
 * `make kernel`: creates the kernel binary in the build folder
 * `make isodir`: creates the directory required to build the iso image with `grub`
 * `make iso`: builds the iso image
+* `make run-iso`: runs the compiled iso with `qemu-system-i386`
 * `make clean`: cleans build file
 * `make dist`: puts all files in the directory into a tarball for distribution if needed
 * `make todolist`: checks source files for `TODO` and `FIXME` comments and lists them
